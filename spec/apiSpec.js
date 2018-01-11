@@ -1,23 +1,27 @@
-'use strict';
+const request = require('supertest');
 
-var request = require('supertest');
-
-describe('loading express', function () {
-    var app;
-    beforeEach(function () {
+describe('loading express', () => {
+    let app;
+    beforeEach(() => {
         app = require('../app.js');
     });
-    afterEach(function () {
+    afterEach(() => {
         app.close();
     });
-    it('responds to /', function testSlash(done) {
+
+    it('responds to /', done => {
         request(app)
             .get('/')
             .expect(200, done);
     });
-    it('404 everything else', function testPath(done) {
+
+    it('404 everything else', done => {
         request(app)
             .get('/foo/bar')
-            .expect(404, done);
+            .expect(404)
+            .end((err, res) => {
+                if (err) return done.fail(err);
+                done(res);
+            });
     });
 });

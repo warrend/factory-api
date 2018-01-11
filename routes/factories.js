@@ -1,31 +1,33 @@
-var express = require('express');
-var factoryStore = require('json-fs-store')('store/companies');
-var router = express.Router();
+const express = require('express');
+const factoryStore = require('json-fs-store')('store/companies');
+const router = express.Router();
 
-/* GET a list of factories */
-router.get('/', function(req, res, next) {
-    factoryStore.list(function(err, factories) {
+router.get('/', (req, res) => {
+    factoryStore.list((err, factories) => {
         if (err) throw err;
 
         res.json(factories);
     });
 });
-router.get('/:id', function(req, res, next) {
-    factoryStore.load(req.params.id, function(err, factory) {
-        if (err) throw err;
 
+router.get('/search', (req, res) => {
+    const searchQuery = req.query.q;
+    /* Complete this function */
+});
+
+router.get('/:id', (req, res) => {
+    factoryStore.load(req.params.id, (err, factory) => {
+        if (err) throw err;
         res.json(factory);
     });
 });
-router.post('/', function(req, res, next) {
+
+router.post('/', (req, res) => {
     if (!req.body) return res.sendStatus(400);
 
-    var newFactory = {
-        name: req.body.name
-    };
-    factoryStore.add(newFactory, function(err) {
+    const newFactory = { name: req.body.name };
+    factoryStore.add(newFactory, err => {
         if (err) throw err;
-
         res.json(newFactory);
     });
 });

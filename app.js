@@ -1,58 +1,39 @@
-var express = require('express');
-var path = require('path');
-
-var logger = require('morgan');
-var bodyParser = require('body-parser');
-
-var factoryRoutes = require('./routes/factories');
-
-var app = express();
+const express = require('express');
+const logger = require('morgan');
+const bodyParser = require('body-parser');
+const factoryRoutes = require('./routes/factories');
+const app = express();
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/factories', factoryRoutes);
 
-app.get('/', function(req, res) {
-    res.send('Status 200');
+// going to http://localhost:3000/ in your browser should yield 'OK'
+app.get('/', (req, res) => {
+    res.sendStatus(200);
 });
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
+app.use((req, res, next) => {
+  const err = new Error('Not Found');
+  err.statusCode = 404;
   next(err);
 });
 
-// error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.send({
-            message: err.message,
-            error: err
-        });
-    });
-}
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
+// error handlers in express must accept 4 parameters, so don't remove next (4th param)
+app.use((err, req, res, next) => {
+    res.status(err.statusCode || 500);
     res.send({
         message: err.message,
-        error: {}
+        error: err
     });
 });
 
 // start the web server
-var server = app.listen(3000, function () {
-    var port = server.address().port;
+const server = app.listen(3000, () => {
+    const port = server.address().port;
     console.log('Server listening at port %s', port);
 });
 
