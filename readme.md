@@ -41,7 +41,7 @@ Existing Resources
     
 **/factories/search?q={factoryName}**
 
-    GET: Retrieves first matching factory where the factory's name equals the searchQuery
+    GET: Retrieves first matching factory where the factory's name equals the url parameter q
 
 
 
